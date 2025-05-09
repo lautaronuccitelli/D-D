@@ -10,10 +10,11 @@ namespace Model
     {
         private static Random random = new Random();
 
-        public static int Tirar(int caras = 20)
+        public static int Tirar(int caras = 20, int modificador = 0)
         {
-            return random.Next(1, caras + 1);
+            int resultado = random.Next(1, caras + 1) + modificador;
+            return resultado;
         }
-    }
 
+    }
 }

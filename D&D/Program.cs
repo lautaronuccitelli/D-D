@@ -1,4 +1,4 @@
-﻿using D_D.Controller;
+﻿using Controller;
 
 class Program
 {

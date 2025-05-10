@@ -36,7 +36,7 @@ namespace Model
                 "Inteligencia" => Inteligencia,
                 _ => 0
             };
-            return (valor - 10) / 2; // Fórmula estándar de D&D para modificadores
+            return (valor - 10) / 2; 
         }
     }
 }

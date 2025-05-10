@@ -38,9 +38,20 @@ namespace Controller
         {
             escenas = new List<Escena>
             {
+                // C
                 new Escena("Un goblin te embosca desde los arbustos con una daga oxidada.", "Combate", 12, "Goblin", 7, 13),
-                new Escena("Pisas una baldosa y escuchas un clic. ¡Es una trampa de flechas!", "Trampa", 15),
-                new Escena("Un mercader misterioso te ofrece una poción a cambio de información.", "Social", 14)
+                new Escena("Un lobo salvaje gruñe y salta hacia ti desde la niebla.", "Combate", 14, "Lobo Salvaje", 10, 14),
+                new Escena("Un esqueleto surge de un montón de huesos y te ataca.", "Combate", 13, "Esqueleto", 8, 12),
+                
+                // T
+                new Escena("Pisas una baldosa y escuchas un clic. Es una trampa de flechas", "Trampa", 15),
+                new Escena("Un puente de cuerda cruje peligrosamente mientras lo cruzas.", "Trampa", 16),
+                new Escena("Un tesoro brillante sobre un pedestal, pero sientes una trampa cercana.", "Trampa", 14),
+                
+                // S
+                new Escena("Un mercader misterioso te ofrece una pocion a cambio de informacion.", "Social", 14),
+                new Escena("Un guardia te detiene en la entrada de la ciudad, sospechando que eres un espia.", "Social", 15),
+                new Escena("Un anciano en una taberna te cuenta un rumor, pero quiere algo a cambio.", "Social", 13)
             };
         }
 
@@ -59,14 +70,21 @@ namespace Controller
                 ResolverAccion(escena, accion);
             }
 
-            vista.MostrarMensaje("¡Has caído en la aventura! Fin del juego.");
+            vista.MostrarMensaje("Fin del juego.");
         }
 
         private void ResolverAccion(Escena escena, string accion)
         {
-            int tirada = Dado.Tirar();
+            int tirada = 0;
             string atributo = "";
             int modificador = 0;
+
+            if (accion != "habilidad" && accion != "ignorar")
+            {
+                vista.MostrarMensaje("Preparandote para tirar el dado...");
+                tirada = Dado.Tirar();
+                vista.MostrarMensaje($"¡El dado muestra un {tirada}!");
+            }
 
             switch (escena.Tipo)
             {
@@ -76,10 +94,12 @@ namespace Controller
                         atributo = "Fuerza";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.ClaseArmaduraEnemigo)
                         {
-                            escena.VidaEnemigo -= random.Next(1, 7); // Daño d6
-                            vista.MostrarMensaje($"¡Golpeas al {escena.Enemigo}! Le quedan {escena.VidaEnemigo} PV.");
+                            int daño = random.Next(1, 7); 
+                            escena.VidaEnemigo -= daño;
+                            vista.MostrarMensaje($"¡Golpeas al {escena.Enemigo} por {daño} de daño! Le quedan {escena.VidaEnemigo} PV.");
                         }
                         else
                             vista.MostrarMensaje("¡Fallas el ataque!");
@@ -94,12 +114,14 @@ namespace Controller
                         atributo = "Destreza";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.Dificultad)
-                            vista.MostrarMensaje("¡Escapas con éxito!");
+                            vista.MostrarMensaje("¡Escapas con exito!");
                         else
                         {
-                            jugador.PuntosVida -= random.Next(1, 6);
-                            vista.MostrarMensaje("¡El enemigo te golpea mientras huyes!");
+                            int daño = random.Next(1, 6);
+                            jugador.PuntosVida -= daño;
+                            vista.MostrarMensaje($"¡El enemigo te golpea por {daño} de daño mientras huyes!");
                         }
                     }
                     break;
@@ -110,12 +132,14 @@ namespace Controller
                         atributo = "Inteligencia";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.Dificultad)
                             vista.MostrarMensaje("Desactivas la trampa con éxito.");
                         else
                         {
-                            jugador.PuntosVida -= random.Next(1, 8);
-                            vista.MostrarMensaje("¡La trampa te hiere!");
+                            int daño = random.Next(1, 8);
+                            jugador.PuntosVida -= daño;
+                            vista.MostrarMensaje($"¡La trampa te hiere por {daño} de daño!");
                         }
                     }
                     else if (accion == "saltar")
@@ -123,12 +147,14 @@ namespace Controller
                         atributo = "Destreza";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.Dificultad)
-                            vista.MostrarMensaje("Saltas la trampa ágilmente.");
+                            vista.MostrarMensaje("Saltas la trampa agilmente.");
                         else
                         {
-                            jugador.PuntosVida -= random.Next(1, 8);
-                            vista.MostrarMensaje("¡Tropiezas y la trampa te golpea!");
+                            int daño = random.Next(1, 8);
+                            jugador.PuntosVida -= daño;
+                            vista.MostrarMensaje($"¡Tropiezas y la trampa te golpea por {daño} de daño!");
                         }
                     }
                     else
@@ -143,8 +169,9 @@ namespace Controller
                         atributo = "Inteligencia";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.Dificultad)
-                            vista.MostrarMensaje("El mercader te da una poción curativa.");
+                            vista.MostrarMensaje("El mercader te da una pocion curativa.");
                         else
                             vista.MostrarMensaje("El mercader se ofende y se marcha.");
                     }
@@ -153,12 +180,14 @@ namespace Controller
                         atributo = "Fuerza";
                         modificador = jugador.ObtenerModificador(atributo);
                         tirada += modificador;
+                        vista.MostrarMensaje($"Modificador de {atributo} (+{modificador}): Total = {tirada}");
                         if (tirada >= escena.Dificultad)
                             vista.MostrarMensaje("El mercader, asustado, te da todo lo que tiene.");
                         else
                         {
-                            jugador.PuntosVida -= random.Next(1, 4);
-                            vista.MostrarMensaje("El mercader llama a sus guardias y te atacan.");
+                            int daño = random.Next(1, 4);
+                            jugador.PuntosVida -= daño;
+                            vista.MostrarMensaje($"El mercader llama a sus guardias y te atacan por {daño} de daño.");
                         }
                     }
                     else
@@ -170,8 +199,9 @@ namespace Controller
 
             if (escena.VidaEnemigo > 0 && escena.Tipo == "Combate")
             {
-                jugador.PuntosVida -= random.Next(1, 6);
-                vista.MostrarMensaje($"El {escena.Enemigo} te ataca y te hace daño.");
+                int daño = random.Next(1, 6);
+                jugador.PuntosVida -= daño;
+                vista.MostrarMensaje($"El {escena.Enemigo} te ataca y te hace {daño} de daño.");
             }
         }
     }

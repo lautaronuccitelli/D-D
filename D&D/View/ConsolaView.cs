@@ -21,7 +21,7 @@ namespace View
             int eleccion;
             do
             {
-                Console.Write("Selecciona un número: ");
+                Console.Write("Selecciona un numero: ");
             } while (!int.TryParse(Console.ReadLine(), out eleccion) || eleccion < 1 || eleccion > personajes.Count);
 
             return personajes[eleccion - 1];
@@ -29,7 +29,7 @@ namespace View
 
         public string ElegirAccion(Escena escena)
         {
-            Console.WriteLine("\n¿Qué deseas hacer?");
+            Console.WriteLine("\n¿Que queres hacer?");
             if (escena.Tipo == "Combate")
                 Console.WriteLine("1. Atacar\n2. Usar habilidad especial\n3. Huir");
             else if (escena.Tipo == "Trampa")
@@ -37,7 +37,13 @@ namespace View
             else if (escena.Tipo == "Social")
                 Console.WriteLine("1. Hablar\n2. Intimidar\n3. Ignorar");
 
-            string input = Console.ReadLine()?.ToLower();
+            string input;
+            do
+            {
+                Console.Write("Elige una accion (1, 2, 3): ");
+                input = Console.ReadLine()?.ToLower();
+            } while (input != "1" && input != "2" && input != "3");
+
             return input switch
             {
                 "1" => escena.Tipo == "Combate" ? "atacar" : escena.Tipo == "Trampa" ? "desactivar" : "hablar",

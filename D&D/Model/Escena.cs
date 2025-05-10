@@ -9,7 +9,7 @@ namespace Model
     public class Escena
     {
         public string Descripcion { get; set; }
-        public string Tipo { get; set; } // Combate, Trampa, Social
+        public string Tipo { get; set; }
         public int Dificultad { get; set; }
         public string Enemigo { get; set; }
         public int VidaEnemigo { get; set; }
